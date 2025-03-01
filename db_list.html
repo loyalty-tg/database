@@ -134,28 +134,24 @@ async function deleteUser(index) {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-        // ✅ GitHub API를 통해 현재 data.json 파일 가져오기
+        // ✅ GitHub API에서 data.json 가져오기
         const response = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
             headers: { "Authorization": `token ${TOKEN}` }
         });
 
-        if (!response.ok) {
-            console.error("❌ GitHub API 응답 오류:", await response.text());
-            throw new Error("GitHub 데이터 가져오기 실패");
-        }
+        if (!response.ok) throw new Error("GitHub 데이터 가져오기 실패");
 
         const fileData = await response.json();
-        const sha = fileData.sha; // ✅ 기존 파일의 SHA 값 가져오기
-        const jsonData = JSON.parse(atob(fileData.content)); // ✅ Base64 디코딩
+        const sha = fileData.sha; 
+        const jsonData = JSON.parse(atob(fileData.content));
 
-        // ✅ 선택한 사용자 데이터 삭제
         if (index < 0 || index >= jsonData.users.length) {
             alert("잘못된 사용자 번호입니다.");
             return;
         }
         jsonData.users.splice(index, 1);
 
-        // ✅ 변경된 데이터를 GitHub API를 통해 업데이트
+        // ✅ GitHub API를 통해 파일 업데이트
         const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
             method: "PUT",
             headers: { 
@@ -164,15 +160,12 @@ async function deleteUser(index) {
             },
             body: JSON.stringify({
                 message: "사용자 삭제",
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2)))), // ✅ Base64 변환 문제 해결
+                content: btoa(JSON.stringify(jsonData, null, 2)), 
                 sha: sha
             })
         });
 
-        if (!updateResponse.ok) {
-            console.error("❌ GitHub 업데이트 오류:", await updateResponse.text());
-            throw new Error("GitHub 업데이트 실패");
-        }
+        if (!updateResponse.ok) throw new Error("GitHub 업데이트 실패");
 
         alert("✅ 데이터가 삭제되었습니다!");
         fetchData(); // ✅ 삭제 후 목록 새로고침
