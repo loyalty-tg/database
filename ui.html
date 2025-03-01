@@ -135,16 +135,41 @@ async function addUser() {
         return;
     }
 
-    const response = await fetch(`https://raw.githubusercontent.com/loyalty-tg/loyalty_database/refs/heads/main/data.json`);
-    const fileData = await response.json();
-    const sha = fileData.sha;
-    const jsonData = JSON.parse(atob(fileData.content));
+    try {
+        // ✅ GitHub API에서 data.json 가져오기
+        const response = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+            headers: { "Authorization": `token ${TOKEN}` }
+        });
 
-    jsonData.users.push({ name, birth, phone, address, note });
+        if (!response.ok) throw new Error("GitHub에서 데이터를 가져오지 못했습니다.");
 
-    await updateGitHubFile(jsonData, sha, "사용자 추가");
+        const fileData = await response.json();
+        const sha = fileData.sha;
+        const jsonData = JSON.parse(atob(fileData.content));
 
-    alert("데이터가 추가되었습니다!");
+        jsonData.users.push({ name, birth, phone, address, note });
+
+        // ✅ GitHub API를 통해 파일 업데이트
+        const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+            method: "PUT",
+            headers: { 
+                "Authorization": `token ${TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: "사용자 추가",
+                content: btoa(JSON.stringify(jsonData, null, 2)), 
+                sha: sha
+            })
+        });
+
+        if (!updateResponse.ok) throw new Error("GitHub 업데이트 실패");
+
+        alert("✅ 데이터가 추가되었습니다!");
+    } catch (error) {
+        console.error("🔥 데이터 추가 오류:", error);
+        alert("❌ 데이터 추가 중 오류 발생");
+    }
 }
 
 async function updateGitHubFile(jsonData, sha, commitMessage) {
