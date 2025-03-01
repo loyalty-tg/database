@@ -1,41 +1,35 @@
 name: Update GitHub Data
 
-# ✅ "on:" 섹션에서 실행 조건을 정의해야 함
 on:
   push:
     branches:
-      - main  # ✅ main 브랜치에 push할 때 실행
-  workflow_dispatch:  # ✅ 수동 실행 가능 (GitHub Actions에서 직접 실행 가능)
+      - main
+  workflow_dispatch:
 
 jobs:
   update-json:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # ✅ GitHub Actions에서 저장소에 "쓰기 권한" 부여
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: Get GitHub API Data
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -H "Authorization: token $TOKEN" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/loyalty-tg/database/contents/data.json
-
       - name: Modify JSON file
         run: |
           echo '{"users": [{"name": "홍길동", "birth": "2000-01-01", "phone": "010-1234-5678", "address": "서울", "note": "테스트"}]}' > data.json
 
       - name: Commit and Push Changes
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add data.json
           git commit -m "Update data.json via GitHub Actions"
-          git push https://x-access-token:$TOKEN@github.com/loyalty-tg/database.git main
+          git push origin main
