@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.token }}  # ✅ Secrets 이름을 "token"으로 변경
 
       - name: Configure Git
         run: |
@@ -29,7 +29,9 @@ jobs:
           echo '{"users": [{"name": "홍길동", "birth": "2000-01-01", "phone": "010-1234-5678", "address": "서울", "note": "테스트"}]}' > data.json
 
       - name: Commit and Push Changes
+        env:
+          TOKEN: ${{ secrets.token }}  # ✅ Secrets 이름을 "token"으로 변경
         run: |
           git add data.json
           git commit -m "Update data.json via GitHub Actions"
-          git push origin main
+          git push https://x-access-token:$TOKEN@github.com/loyalty-tg/database.git main
