@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>의리사업부 데이터베이스</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <script
+	 src="https://kit.fontawesome.com/b97fd141c7.js"
+	 crossorigin="anonymous"
+   ></script>
+    <style>
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal h3 {
+            margin-bottom: 10px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%;
+            font-size: 14px;
+            user-select: none; /* 텍스트 선택 방지 */
+            outline: none; /* 클릭 후 테두리 제거 */
+        }
+
+        .btn-confirm {
+            background-color: #214761; /* 남색 */
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* 버튼 클릭 시에도 색상 유지 */
+        .btn-confirm:active, 
+        .btn-cancel:active {
+            background-color: #214761 !important; /* 배경색 유지 */
+            color: white !important; /* 글씨 색 유지 */
+            outline: none;
+        }
+
+        /* 버튼 클릭 후 포커스 제거 */
+        .btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* 관리자 계정 스타일 */
+        .div-square {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .div-square:hover {
+            background-color: #ddd;
+        }
+
+        .div-square h4 {
+            cursor: pointer;
+        }
+		
+
+/* 성공 모달 스타일 */
+.success-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* 배경 어두운 투명도 */
+}
+
+/* 성공 모달 콘텐츠 (투명도 50%) */
+.success-modal-content {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0.8; /* ✨ 투명도 50% 설정 */
+}
+
+
+    </style>
+<link rel="stylesheet" href="https://atugatran.github.io/FontAwesome6Pro/css/all.min.css" >
+</head>
+<body>
+     
+           
+          
+    <div id="wrapper">
+         <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="adjust-nav">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <img src="https://i.imgur.com/LeXEsL5.png" />
+
+                    </a>
+                    
+                </div>
+              
+                <span class="logout-spn" >
+                  <a href="#" style="color:#fff;"><i class="fa fa-sign-out" aria-hidden="true"></i> LOGOUT</a>  
+
+                </span>
+            </div>
+        </div>
+        <!-- /. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                 
+
+
+                    <li class="active-link">
+                        <a href="index.html" ><i class="fa fa-desktop "></i>메인 대시보드<span class="badge">수정중</span></a>
+                    </li>
+                   
+
+                    <li>
+                        <a href="ui.html"><i class="fa fa-user-plus" aria-hidden="true"></i>DB 추가  <span class="badge">수정중</span></a>
+                    </li>
+                    <li>
+                        <a href="blank.html"><i class="fa-solid fa-table-list"></i>DB 목록  <span class="badge">수정중</span></a>
+                    </li>
+
+
+<li>
+    <a href="https://www.naver.com" target="_blank">
+        <i class="fa-solid fa-square-n"></i>네이버 바로가기
+    </a>
+</li>
+<li>
+    <a href="https://www.chatgpt.com" target="_blank">
+        <i class="fa-solid fa-graduation-cap"></i>챗GPT 바로가기
+    </a>
+</li>
+
+                    <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크3 바로가기 </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크4 바로가기</a>
+                    </li>
+                     <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크5 바로가기 </a>
+                    </li>
+                    
+                </ul>
+                            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row">
+                    <div class="col-lg-12">
+                     <h2>메인 대시보드</h2>   
+                    </div>
+                </div>              
+                 <!-- /. ROW  -->
+                  <hr />
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div class="alert alert-success">
+                             <strong>의리사업부 데이터베이스에 오신 것을 환영합니다 !</strong>
+<div id="current_date"> <!-- /.현재 날짜 코드 시작 -->
+    <script>
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const currentDate = new Date().toLocaleDateString('ko-KR', options);
+        document.getElementById("current_date").innerHTML = "< 현재 날짜 : " + currentDate + " >";
+    </script>
+</div> <!-- /.현재 날짜 코드 끝 -->
+
+                        </div>
+                       
+                    </div>
+                    </div>
+                  <!-- /. ROW  --> 
+                            <div class="row text-center pad-top">
+                 
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa-solid fa-calculator fa-5x"></i>
+                      <h4>수수료 계산</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+<i class="fa-sharp-duotone fa-regular fa-lightbulb fa-5x"></i>
+                      <h4>새로운 소식</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-users fa-5x"></i>
+                      <h4>매니저 연락처</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+        <div class="div-square" onclick="openPasswordModal()">
+            <i class="fa fa-key fa-5x"></i>
+            <h4>관리자 계정</h4>
+        </div>
+    </div>
+
+    <!-- 비밀번호 입력 모달 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>비밀번호 입력</h3>
+            <input type="password" id="passwordInput" class="password-input" placeholder="비밀번호 입력">
+            <div class="modal-buttons">
+                <button class="btn btn-confirm" onclick="checkPassword();">확인</button>
+                <button class="btn btn-cancel" onclick="closePasswordModal();">취소</button>
+            </div>
+            <p id="errorMessage" style="color: red; font-size: 14px; display: none;">비밀번호가 틀렸습니다.</p>
+        </div>
+    </div>
+
+    <!-- 성공 모달 -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <h3>✅ 비밀번호 확인 완료!</h3>
+            <p>잠시 후 이동합니다...</p>
+        </div>
+    </div>
+
+    <script>
+        const correctPassword = "1234"; // 원하는 비밀번호 설정
+
+        function openPasswordModal() {
+            document.getElementById("passwordModal").style.display = "block";
+
+            // 클릭된 버튼의 포커스를 제거 (아이콘 색 변경 방지)
+            document.activeElement.blur();
+        }
+
+        function closePasswordModal() {
+            document.getElementById("passwordModal").style.display = "none";
+            document.getElementById("passwordInput").value = ""; 
+            document.getElementById("errorMessage").style.display = "none"; 
+        }
+
+        function openSuccessModal() {
+            document.getElementById("successModal").style.display = "block";
+            setTimeout(() => {
+                window.location.href = "https://www.naver.com";
+            }, 2000);
+        }
+
+        function checkPassword() {
+            let userInput = document.getElementById("passwordInput").value;
+
+            if (userInput === correctPassword) {
+                closePasswordModal();
+                openSuccessModal();
+            } else {
+                document.getElementById("errorMessage").style.display = "block"; 
+            }
+        }
+    </script>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-comments-o fa-5x"></i>
+                      <h4>Support</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+              </div>
+                 <!-- /. ROW  --> 
+                <div class="row text-center pad-top">
+                 
+                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-clipboard fa-5x"></i>
+                      <h4>All Docs</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-gear fa-5x"></i>
+                      <h4>Settings</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-wechat fa-5x"></i>
+                      <h4>Live Talk</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-bell-o fa-5x"></i>
+                      <h4>Notifications </h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-rocket fa-5x"></i>
+                      <h4>Launch</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-user fa-5x"></i>
+                      <h4>Register User</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div> 
+              </div>   
+                  <!-- /. ROW  -->    
+                 <div class="row text-center pad-top">
+                   
+                 
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-envelope-o fa-5x"></i>
+                      <h4>Mail Box</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-lightbulb-o fa-5x"></i>
+                      <h4>New Issues</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-users fa-5x"></i>
+                      <h4>See Users</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-key fa-5x"></i>
+                      <h4>Admin </h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="#" >
+ <i class="fa fa-comments-o fa-5x"></i>
+                      <h4>Support</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-circle-o-notch fa-5x"></i>
+                      <h4>Check Data</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+              </div>
+                 <!-- /. ROW  -->  
+                 <div class="row text-center pad-top">
+                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-rocket fa-5x"></i>
+                      <h4>Launch</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-clipboard fa-5x"></i>
+                      <h4>All Docs</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-gear fa-5x"></i>
+                      <h4>Settings</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-wechat fa-5x"></i>
+                      <h4>Live Talk</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-bell-o fa-5x"></i>
+                      <h4>Notifications </h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  
+                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-user fa-5x"></i>
+                      <h4>Register User</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div> 
+              </div>   
+                  <!-- /. ROW  -->  
+                <div class="row text-center pad-top">
+                   
+                 
+                  
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-lightbulb-o fa-5x"></i>
+                      <h4>New Issues</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-users fa-5x"></i>
+                      <h4>See Users</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-key fa-5x"></i>
+                      <h4>Admin </h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-comments-o fa-5x"></i>
+                      <h4>Support</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-circle-o-notch fa-5x"></i>
+                      <h4>Check Data</h4>
+                      </a>
+                      </div>
+                     
+                     
+                  </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                      <div class="div-square">
+                           <a href="dashboard_error.html" >
+ <i class="fa fa-envelope-o fa-5x"></i>
+                      <h4>Mail Box</h4>
+                      </a>
+                      </div>
+                     
+              </div>
+                     
+                  </div>
+                 <!-- /. ROW  -->   
+				  <div class="row">
+                    <div class="col-lg-12 ">
+					<br/>
+                        <div class="alert alert-secondary">
+                            <strong><a target="_blank" href="https://www.flaticon.com/"> 무료 이모티콘 바로가기</a></strong>
+                        </div>
+                       
+                    </div>
+                    </div>
+                  <!-- /. ROW  --> 
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+    <div class="footer">
+      
+    
+            <div class="row">
+                <div class="col-lg-12" >
+                    &copy;  2025 의리사업부 데이터베이스 | 제작자 : 김태경
+                </div>
+            </div>
+        </div>
+          
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
+    
+   
+</body>
+</html>
