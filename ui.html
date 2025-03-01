@@ -121,7 +121,7 @@
 
 <!-- JavaScript (GitHub API 연동) -->
 <script>
-const TOKEN = "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";  
+const TOKEN = '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';
 
 async function addUser() {
     const name = document.getElementById("name").value;
@@ -137,11 +137,14 @@ async function addUser() {
 
     try {
         // ✅ GitHub API에서 data.json 가져오기
-        const response = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+        const response = await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
             headers: { "Authorization": `token ${TOKEN}` }
         });
 
-        if (!response.ok) throw new Error("GitHub에서 데이터를 가져오지 못했습니다.");
+        if (!response.ok) {
+            console.error("❌ GitHub API 응답 오류:", await response.text());
+            throw new Error("GitHub에서 데이터를 가져오지 못했습니다.");
+        }
 
         const fileData = await response.json();
         const sha = fileData.sha;
@@ -149,8 +152,11 @@ async function addUser() {
 
         jsonData.users.push({ name, birth, phone, address, note });
 
-        // ✅ GitHub API를 통해 파일 업데이트
-        const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+        // ✅ 한글 깨짐 방지 (Base64 인코딩 방식 수정)
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2))));
+
+        // ✅ 변경된 데이터를 GitHub API를 통해 업데이트
+        const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
             method: "PUT",
             headers: { 
                 "Authorization": `token ${TOKEN}`,
@@ -158,22 +164,29 @@ async function addUser() {
             },
             body: JSON.stringify({
                 message: "사용자 추가",
-                content: btoa(JSON.stringify(jsonData, null, 2)), 
+                content: encodedContent,  // ✅ 올바르게 인코딩된 데이터
                 sha: sha
             })
         });
 
-        if (!updateResponse.ok) throw new Error("GitHub 업데이트 실패");
+        if (!updateResponse.ok) {
+            console.error("❌ GitHub 업데이트 오류:", await updateResponse.text());
+            throw new Error("GitHub 업데이트 실패");
+        }
 
         alert("✅ 데이터가 추가되었습니다!");
+        window.location.href = "db_list.html"; // ✅ 추가 후 목록 페이지로 이동
     } catch (error) {
         console.error("🔥 데이터 추가 오류:", error);
         alert("❌ 데이터 추가 중 오류 발생");
     }
 }
 
+
 async function updateGitHubFile(jsonData, sha, commitMessage) {
-    await fetch(`https://raw.githubusercontent.com/loyalty-tg/loyalty_database/refs/heads/main/data.json`, {
+    const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2)))); // ✅ 한글 깨짐 방지
+
+    await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
         method: "PUT",
         headers: {
             "Authorization": `token ${TOKEN}`,
@@ -181,13 +194,14 @@ async function updateGitHubFile(jsonData, sha, commitMessage) {
         },
         body: JSON.stringify({
             message: commitMessage,
-            content: btoa(JSON.stringify(jsonData, null, 2)), 
+            content: encodedContent, 
             sha: sha
         })
     });
 }
 
-    fetchData();
+
+
 </script>
 
 </body>
