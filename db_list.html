@@ -18,18 +18,38 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="#"><img src="https://i.imgur.com/LeXEsL5.png" /></a>
             </div>
-            <span class="logout-spn">
-                <a href="#" style="color:#fff;"><i class="fa fa-sign-out"></i> LOGOUT</a>
-            </span>
+                <span class="empty" >
+
+                </span>
         </div>
     </div>
 
     <nav class="navbar-default navbar-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
-                <li><a href="index.html"><i class="fa fa-desktop"></i>메인 대시보드</a></li>
-                <li><a href="ui.html"><i class="fa fa-user-plus"></i>DB 추가</a></li>
-                <li class="active-link"><a href="db_list.html"><i class="fa fa-table"></i>DB 목록</a></li>
+                <li><a href="index.html"><i class="fa fa-desktop"></i>메인 대시보드<span class="badge">수정중</span></a></li>
+                <li><a href="ui.html"><i class="fa fa-user-plus"></i>DB 추가<span class="badge">수정중</span></a></li>
+                <li class="active-link"><a href="db_list.html"><i class="fa fa-table"></i>DB 목록<span class="badge">수정중</span></a></li>
+<li>
+    <a href="https://www.naver.com" target="_db_list">
+        <i class="fa-solid fa-square-n"></i>네이버 바로가기
+    </a>
+</li>
+<li>
+    <a href="https://www.chatgpt.com" target="_db_list">
+        <i class="fa-solid fa-graduation-cap"></i>챗GPT 바로가기
+    </a>
+</li>
+
+                    <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크3 바로가기 </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크4 바로가기</a>
+                    </li>
+                     <li>
+                        <a href="#"><i class="fa-solid fa-star"></i>링크5 바로가기 </a>
+                    </li>
             </ul>
         </div>
     </nav>
@@ -78,14 +98,14 @@
 </div>
 
 <script>
-    const GITHUB_USERNAME = "사용자명";
-    const REPO_NAME = "저장소명";
+    const GITHUB_USERNAME = "loyalty-tg";
+    const REPO_NAME = "loyalty_database";
     const FILE_PATH = "data.json";
-    const TOKEN = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN";
+    const TOKEN = "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";
 
     async function fetchData() {
         try {
-            const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`);
+            const response = await fetch(`https://raw.githubusercontent.com/loyalty-tg/loyalty_database/refs/heads/main/data.json`);
             if (!response.ok) throw new Error("데이터를 가져오는 데 실패했습니다.");
 
             const data = await response.json();
@@ -121,45 +141,80 @@
         }
     }
 
-    async function deleteUser(index) {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
+    async function editUser(index) {
+        const newName = prompt("새 이름을 입력하세요:");
+        if (!newName) return;
 
-        try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
-                headers: {
-                    "Authorization": `token ${TOKEN}`
-                }
-            });
+        const response = await fetch(`https://raw.githubusercontent.com/loyalty-tg/loyalty_database/refs/heads/main/data.json`);
+        const fileData = await response.json();
+        const sha = fileData.sha;
+        const jsonData = JSON.parse(atob(fileData.content));
 
-            if (!response.ok) throw new Error("GitHub 데이터 가져오기 실패");
+        jsonData.users[index].name = newName;
 
-            const fileData = await response.json();
-            const sha = fileData.sha;
-            const jsonData = JSON.parse(atob(fileData.content));
+        await updateGitHubFile(jsonData, sha, "사용자 정보 수정");
 
-            jsonData.users.splice(index, 1);
+        alert("사용자 정보가 수정되었습니다!");
+        fetchData();
+    }
 
-            const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: "사용자 삭제",
-                    content: btoa(JSON.stringify(jsonData, null, 2)),
-                    sha: sha
-                })
-            });
+async function deleteUser(index) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
 
-            if (!updateResponse.ok) throw new Error("GitHub 업데이트 실패");
+    try {
+        // GitHub API를 통해 현재 data.json 파일 가져오기
+        const response = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+            headers: {
+                "Authorization": `token ${TOKEN}`
+            }
+        });
 
-            alert("데이터가 삭제되었습니다!");
-            fetchData();
-        } catch (error) {
-            console.error("삭제 오류:", error);
-            alert("삭제 중 오류가 발생했습니다.");
-        }
+        if (!response.ok) throw new Error("GitHub 데이터 가져오기 실패");
+
+        const fileData = await response.json();
+        const sha = fileData.sha; // 파일 수정 시 필요한 SHA 값
+        const jsonData = JSON.parse(atob(fileData.content));
+
+        // 선택한 사용자 데이터 삭제
+        jsonData.users.splice(index, 1);
+
+        // GitHub API를 통해 파일 업데이트
+        const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/loyalty_database/contents/data.json`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: "사용자 삭제",
+                content: btoa(JSON.stringify(jsonData, null, 2)), // JSON을 Base64 인코딩
+                sha: sha // GitHub에서 기존 파일의 SHA 값을 제공해야 함
+            })
+        });
+
+        if (!updateResponse.ok) throw new Error("GitHub 업데이트 실패");
+
+        alert("데이터가 삭제되었습니다!");
+        fetchData(); // 삭제 후 목록 새로고침
+    } catch (error) {
+        console.error("삭제 오류:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+    }
+}
+
+    async function updateGitHubFile(jsonData, sha, commitMessage) {
+        await fetch(`https://raw.githubusercontent.com/loyalty-tg/loyalty_database/refs/heads/main/data.json`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: commitMessage,
+                content: btoa(JSON.stringify(jsonData, null, 2)),
+                sha: sha
+            })
+        });
     }
 
     fetchData();
