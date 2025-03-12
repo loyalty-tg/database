@@ -16,6 +16,29 @@
 	 src="https://kit.fontawesome.com/b97fd141c7.js"
 	 crossorigin="anonymous"
    ></script>
+   
+<!-- ✅ Firebase 초기화 코드 추가 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+      apiKey: "AIzaSyAKnDf_rZwQ9UKygNQarp9IynVPCcy-3GU",
+      authDomain: "mydatabase-26ae9.firebaseapp.com",
+      projectId: "mydatabase-26ae9",
+      storageBucket: "mydatabase-26ae9.firebasestorage.app",
+      messagingSenderId: "1093371781484",
+      appId: "1:1093371781484:web:badf4a3d2903fcecfe1349"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ✅ 전역 변수로 Firebase Firestore 객체 저장
+  window.firebaseDB = db;
+</script>
+</head>
+
     <style>
         /* 모달 스타일 */
         .modal {
