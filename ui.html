@@ -3,15 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>의리사업부 데이터베이스</title>
-    <!-- BOOTSTRAP STYLES -->
+    <title>DB 추가</title>
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
-    <!-- FONTAWESOME STYLES -->
     <link href="assets/css/font-awesome.css" rel="stylesheet" />
-    <!-- CUSTOM STYLES -->
     <link href="assets/css/custom.css" rel="stylesheet" />
-    <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+
+    <!-- FontAwesome 아이콘 -->
     <script src="https://kit.fontawesome.com/b97fd141c7.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -22,186 +20,102 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="#"><img src="https://i.imgur.com/LeXEsL5.png" /></a>
             </div>
-                <span class="empty" >
-
-                </span>
+            <span class="logout-spn">
+                <a href="#" style="color:#fff;"><i class="fa fa-sign-out"></i> LOGOUT</a>
+            </span>
         </div>
     </div>
 
     <nav class="navbar-default navbar-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
-                <li><a href="index.html"><i class="fa fa-desktop"></i>메인 대시보드<span class="badge">수정중</span></a></li>
-                <li class="active-link"><a href="ui.html"><i class="fa fa-user-plus"></i>DB 추가<span class="badge">수정중</span></a></li>
-                <li><a href="db_list.html"><i class="fa fa-table"></i>DB 목록<span class="badge">수정중</span></a></li>
-<li>
-    <a href="https://www.naver.com" target="_db_list">
-        <i class="fa-solid fa-square-n"></i>네이버 바로가기
-    </a>
-</li>
-<li>
-    <a href="https://www.chatgpt.com" target="_db_list">
-        <i class="fa-solid fa-graduation-cap"></i>챗GPT 바로가기
-    </a>
-</li>
-
-                    <li>
-                        <a href="#"><i class="fa-solid fa-star"></i>링크3 바로가기 </a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa-solid fa-star"></i>링크4 바로가기</a>
-                    </li>
-                     <li>
-                        <a href="#"><i class="fa-solid fa-star"></i>링크5 바로가기 </a>
-                    </li>
+                <li><a href="index.html"><i class="fa fa-desktop"></i>메인 대시보드</a></li>
+                <li class="active-link"><a href="ui.html"><i class="fa fa-user-plus"></i>DB 추가</a></li>
+                <li><a href="db_list.html"><i class="fa fa-table"></i>DB 목록</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- 메인 컨텐츠 영역 -->
     <div id="page-wrapper">
         <div id="page-inner">
             <div class="row">
-                <div class="col-md-12">
-                    <h2>DB 추가</h2>
-                </div>
+                <div class="col-md-12"><h2>DB 추가</h2></div>
             </div>
             <hr />
 
             <div class="row">
                 <div class="col-lg-6">
-                    <h5>필수 인적사항</h5>
-
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                        <input type="text" id="name" class="form-control" placeholder="이름 입력" />
-                    </div>
-                    <br />
-
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input type="text" id="birth" class="form-control" placeholder="생년월일 8자리" />
-                        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                        <input type="text" id="phone" class="form-control" placeholder="휴대전화번호" />
-                    </div>
-                    <br />
-
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-home"></i></span>
-                        <input type="text" id="address" class="form-control" placeholder="주소 입력" />
-                    </div>
-                    <br />
-
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-sticky-note"></i></span>
-                        <input type="text" id="note" class="form-control" placeholder="특이사항 입력" />
-                    </div>
-                    <br />
-
-                    <button class="btn btn-success btn-lg btn-block" onclick="addUser()">추가하기</button>
-                </div>
-
-                <div class="col-lg-6">
-                    <h5>저장된 데이터</h5>
-                    <ul id="userList" class="list-group"></ul>
+                    <form onsubmit="event.preventDefault(); addUser();">
+                        <div class="form-group">
+                            <label>이름</label>
+                            <input type="text" id="name" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>생년월일</label>
+                            <input type="date" id="birth" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>휴대전화번호</label>
+                            <input type="text" id="phone" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>주소</label>
+                            <input type="text" id="address" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>특이사항</label>
+                            <textarea id="note" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">추가하기</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 하단 푸터 -->
 <div class="footer">
     <div class="row">
-        <div class="col-lg-12">
-            &copy; 2025 의리사업부 데이터베이스 | 제작자 : 김태경
-        </div>
+        <div class="col-lg-12">&copy; 2025 의리사업부 데이터베이스 | 제작자 : 김태경</div>
     </div>
 </div>
 
-<!-- JavaScript (GitHub API 연동) -->
-<script>
-const TOKEN = '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';
+<!-- ✅ Firestore 연동 -->
+<script type="module">
+  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-async function addUser() {
-    const name = document.getElementById("name").value;
-    const birth = document.getElementById("birth").value;
-    const phone = document.getElementById("phone").value;
-    const address = document.getElementById("address").value;
-    const note = document.getElementById("note").value;
+  // ✅ Firebase Firestore 객체 가져오기
+  const db = window.firebaseDB;
 
-    if (!name || !birth || !phone || !address) {
-        alert("모든 필드를 입력하세요!");
-        return;
-    }
+  async function addUser() {
+      const name = document.getElementById("name").value;
+      const birth = document.getElementById("birth").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const note = document.getElementById("note").value;
 
-    try {
-        // ✅ GitHub API에서 data.json 가져오기
-        const response = await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
-            headers: { "Authorization": `token ${TOKEN}` }
-        });
+      if (!name || !birth || !phone || !address) {
+          alert("모든 필드를 입력하세요!");
+          return;
+      }
 
-        if (!response.ok) {
-            console.error("❌ GitHub API 응답 오류:", await response.text());
-            throw new Error("GitHub에서 데이터를 가져오지 못했습니다.");
-        }
+      try {
+          // ✅ Firestore에 데이터 추가 (컬렉션이 없으면 자동 생성됨)
+          await addDoc(collection(db, "users"), {
+              name: name,
+              birth: birth,
+              phone: phone,
+              address: address,
+              note: note
+          });
 
-        const fileData = await response.json();
-        const sha = fileData.sha;
-        const jsonData = JSON.parse(atob(fileData.content));
-
-        jsonData.users.push({ name, birth, phone, address, note });
-
-        // ✅ 한글 깨짐 방지 (Base64 인코딩 방식 수정)
-        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2))));
-
-        // ✅ 변경된 데이터를 GitHub API를 통해 업데이트
-        const updateResponse = await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
-            method: "PUT",
-            headers: { 
-                "Authorization": `token ${TOKEN}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                message: "사용자 추가",
-                content: encodedContent,  // ✅ 올바르게 인코딩된 데이터
-                sha: sha
-            })
-        });
-
-        if (!updateResponse.ok) {
-            console.error("❌ GitHub 업데이트 오류:", await updateResponse.text());
-            throw new Error("GitHub 업데이트 실패");
-        }
-
-        alert("✅ 데이터가 추가되었습니다!");
-        window.location.href = "db_list.html"; // ✅ 추가 후 목록 페이지로 이동
-    } catch (error) {
-        console.error("🔥 데이터 추가 오류:", error);
-        alert("❌ 데이터 추가 중 오류 발생");
-    }
-}
-
-
-async function updateGitHubFile(jsonData, sha, commitMessage) {
-    const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2)))); // ✅ 한글 깨짐 방지
-
-    await fetch(`https://api.github.com/repos/loyalty-tg/database/contents/data.json`, {
-        method: "PUT",
-        headers: {
-            "Authorization": `token ${TOKEN}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            message: commitMessage,
-            content: encodedContent, 
-            sha: sha
-        })
-    });
-}
-
-
-
+          alert("✅ 사용자 추가 완료!");
+          window.location.href = "db_list.html"; // 데이터 추가 후 목록 페이지로 이동
+      } catch (error) {
+          console.error("🔥 오류 발생:", error);
+          alert("❌ 데이터 추가 중 오류 발생");
+      }
+  }
 </script>
 
 </body>
