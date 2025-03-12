@@ -84,10 +84,16 @@
 <script type="module">
   import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  // ✅ Firebase Firestore 객체 가져오기
+  // ✅ Firestore 객체 가져오기
   const db = window.firebaseDB;
 
   async function addUser() {
+      console.log("Firestore DB:", db); // Firestore가 정상적으로 로드되는지 확인
+      if (!db) {
+          alert("❌ Firestore가 정상적으로 로드되지 않았습니다.");
+          return;
+      }
+
       const name = document.getElementById("name").value;
       const birth = document.getElementById("birth").value;
       const phone = document.getElementById("phone").value;
@@ -95,27 +101,22 @@
       const note = document.getElementById("note").value;
 
       if (!name || !birth || !phone || !address) {
-          alert("모든 필드를 입력하세요!");
+          alert("❌ 모든 필드를 입력하세요!");
           return;
       }
 
       try {
-          // ✅ Firestore에 데이터 추가 (컬렉션이 없으면 자동 생성됨)
-          await addDoc(collection(db, "users"), {
-              name: name,
-              birth: birth,
-              phone: phone,
-              address: address,
-              note: note
-          });
-
+          await addDoc(collection(db, "users"), { name, birth, phone, address, note });
           alert("✅ 사용자 추가 완료!");
-          window.location.href = "db_list.html"; // 데이터 추가 후 목록 페이지로 이동
+          window.location.href = "db_list.html"; // 데이터 추가 후 목록으로 이동
       } catch (error) {
           console.error("🔥 오류 발생:", error);
           alert("❌ 데이터 추가 중 오류 발생");
       }
   }
+
+  // ✅ `addUser()`를 전역 함수로 설정
+  window.addUser = addUser;
 </script>
 
 </body>
